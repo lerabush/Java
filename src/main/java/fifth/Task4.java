@@ -1,60 +1,53 @@
 package fifth;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+
 public class Task4 {
-    private static final String OK_FILEPATH = "src/main/resources/ok.txt";
-    private static final String ERROR_FILEPATH = "src/main/resources/error.txt";
-
-    private static double sum;
-
-    public static void main(String[] args) {
-        printSumOfValues(OK_FILEPATH);
-        printSumOfValues(ERROR_FILEPATH);
-        printSumOfValues("not file");
-    }
-
-    private static int readValues(String fileName, List<Double> numbers) {
-        File file = new File(fileName);
-        try (Scanner sc = new Scanner(file)) {
-            while (sc.hasNext()) {
-                numbers.add(Double.parseDouble(sc.next()));
+    public static Result<ArrayList<Double>, String> readValues(String filename) throws FileNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream(new File(filename));
+        if (fileInputStream == null) {
+            return Result.err(String.format("File %s not found!", filename));
+        } else {
+            Scanner scanner = new Scanner(fileInputStream);
+            ArrayList<Double> values = new ArrayList<>();
+            while (scanner.hasNext()) {
+                String next = scanner.next();
+                try {
+                    values.add(Double.parseDouble(next));
+                } catch (NumberFormatException e) {
+                    return Result.err(String.format("%s is not a number", next));
+                }
             }
-            return 0;
-        } catch (FileNotFoundException ex) {
-            return -1;
-        } catch (NumberFormatException ex) {
-            return -2;
+            return Result.ok(values);
         }
     }
 
-    private static int sumOfValues(String fileName) {
-        List<Double> nums = new ArrayList<>();
-        int res = readValues(fileName, nums);
-        if (res == 0) {
-            for (double num : nums) {
-                sum += num;
+    public static Result<Double, String> sumOfValues(String filename) throws FileNotFoundException {
+        Result<Double, String> result;
+        Result<ArrayList<Double>, String> values = readValues(filename);
+        if (values instanceof Ok) {
+            Ok<ArrayList<Double>, String> ok = (Ok<ArrayList<Double>, String>) values;
+            double sum = 0;
+            for (Double value : ok.getValue()) {
+                sum += value;
             }
+            result = Result.ok(sum);
+        } else {
+            Error<ArrayList<Double>, String> err = (Error<ArrayList<Double>, String>) values;
+            result = Result.err(err.getError());
         }
-        return res;
+        return result;
     }
 
-    public static void printSumOfValues(String fileName) {
-        int resultCode = sumOfValues(fileName);
-        switch (resultCode) {
-            case 0:
-                System.out.println("Program finished successfully, sum is " + sum);
-                break;
-            case -1:
-                System.out.println("Program finished with error code -1: file wasn't found");
-                break;
-            case -2:
-                System.out.println("Program finished with error code -2: " +
-                        "not all lines in file are double numbers");
-                break;
-        }
+    public static void main(String[] args) throws FileNotFoundException {
+        Result<Double, String> result = sumOfValues("src/main/java/fifth/out.txt");
+        Result<Double, String> result2 = sumOfValues("src/main/java/fifth/error.txt");
+        System.out.println(((Ok<Double, String>) result).getValue());
+        System.out.println(((Error<Double, String>) result2).getError());
     }
 }
 
