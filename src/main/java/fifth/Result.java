@@ -1,11 +1,27 @@
 package fifth;
 
-public interface Result<V, E> {
-    static <V, E> Ok ok(final V value) {
-        return new Ok(value);
+public class Result<V> {
+    private final int errorCode;
+
+    private final String errorMessage;
+
+    private final V result;
+
+    public int getErrorCode() {
+        return errorCode;
     }
 
-    static <V, E> Error err(final E error) {
-        return new Error(error);
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public V getResult() {
+        return result;
+    }
+
+    public Result(int errorCode, String errorMessage, V result) {
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+        this.result = result;
     }
 }

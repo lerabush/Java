@@ -7,10 +7,10 @@ import java.util.*;
 
 
 public class Task4 {
-    public static Result<ArrayList<Double>, String> readValues(String filename) throws FileNotFoundException {
+    public static Result<ArrayList<Double>> readValues(String filename) throws FileNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(new File(filename));
         if (fileInputStream == null) {
-            return Result.err(String.format("File %s not found!", filename));
+            return new Result(-1,String.format("File %s not found!",filename),null);
         } else {
             Scanner scanner = new Scanner(fileInputStream);
             ArrayList<Double> values = new ArrayList<>();
@@ -19,35 +19,45 @@ public class Task4 {
                 try {
                     values.add(Double.parseDouble(next));
                 } catch (NumberFormatException e) {
-                    return Result.err(String.format("%s is not a number", next));
+                    return new Result(-2,String.format("%s is not a number", next),null);
                 }
             }
-            return Result.ok(values);
+            return new Result(0,"OK",values);
         }
     }
 
-    public static Result<Double, String> sumOfValues(String filename) throws FileNotFoundException {
-        Result<Double, String> result;
-        Result<ArrayList<Double>, String> values = readValues(filename);
-        if (values instanceof Ok) {
-            Ok<ArrayList<Double>, String> ok = (Ok<ArrayList<Double>, String>) values;
+    public static Result<Double> sumOfValues(String filename) throws FileNotFoundException {
+        Result<Double> result;
+        Result<ArrayList<Double>> values = readValues(filename);
+        if (values.getErrorCode()==0) {
             double sum = 0;
-            for (Double value : ok.getValue()) {
+            for (Double value : values.getResult()) {
                 sum += value;
             }
-            result = Result.ok(sum);
+            result = new Result(0,"OK",sum);
         } else {
-            Error<ArrayList<Double>, String> err = (Error<ArrayList<Double>, String>) values;
-            result = Result.err(err.getError());
+            result = new Result(values.getErrorCode(),values.getErrorMessage(),null);
         }
         return result;
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Result<Double, String> result = sumOfValues("src/main/java/fifth/out.txt");
-        Result<Double, String> result2 = sumOfValues("src/main/java/fifth/error.txt");
-        System.out.println(((Ok<Double, String>) result).getValue());
-        System.out.println(((Error<Double, String>) result2).getError());
+        long startTime1 = System.nanoTime();
+        Result<Double> result = sumOfValues("src/main/java/fifth/out.txt");
+        long time = System.nanoTime() - startTime1;
+        long startTime2 = System.nanoTime();
+        Result<Double> result2 = sumOfValues("src/main/java/fifth/error.txt");
+        long time2 = System.nanoTime() - startTime2;
+        System.out.println(result.getResult());
+        System.out.println(result.getErrorCode());
+        System.out.println(result.getErrorMessage());
+        System.out.println(time);
+        System.out.println("--------");
+        System.out.println(result2.getResult());
+        System.out.println(result2.getErrorCode());
+        System.out.println(result2.getErrorMessage());
+        System.out.println(time2);
+
     }
 }
 

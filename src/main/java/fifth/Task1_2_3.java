@@ -6,12 +6,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Task1_2_3 {
-    private static final String OK_FILEPATH = "src/main/resources/ok.txt";
-    private static final String ERROR_FILEPATH = "src/main/resources/error.txt";
+    private static final String OK_FILEPATH = "src/main/java/fifth/out.txt";
+    private static final String ERROR_FILEPATH = "src/main/java/fifth/error.txt";
 
     public static void main(String[] args) {
+        long startTime1 = System.nanoTime();
         printSumOfValuesFromFile(OK_FILEPATH);
+        long time = System.nanoTime() - startTime1;
+        System.out.println(time);
+        long startTime2 = System.nanoTime();
         printSumOfValuesFromFile(ERROR_FILEPATH);
+        long time2 = System.nanoTime() - startTime1;
+        System.out.println(time2);
+
     }
 
     private static ArrayList<Double> readValues(String fileName) throws FileNotFoundException, NumberFormatException {
