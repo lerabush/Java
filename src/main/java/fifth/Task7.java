@@ -1,28 +1,36 @@
 package fifth;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.CharBuffer;
 import java.util.Scanner;
 
 
 public class Task7 {
     public static void main(String[] args) throws Exception {
-        //try c ресурсами
-        Scanner sc = null;
-        try{
-            sc = new Scanner(new File("src/main/java/fifth/hello.txt"));
-            System.out.println(sc.next());
-        }catch (Exception ex){
-            try{
-                throw new IOException("error while working!");
-            }catch (Exception ex1){
-                System.out.println(sc.ioException());
-            }
+        Scanner in1 = null;
+        try (FileInputStream fs = new FileInputStream("src/main/java/fifth/hello.txt")) {
+            in1 = new Scanner(fs);
+            var fd = fs.getFD();
+            Method method = fd.getClass().getDeclaredMethod("close0");
+            method.setAccessible(true);
+            Field fieldFd = fd.getClass().getDeclaredField("closed");
+            fieldFd.setAccessible(true);
+            Field path = fs.getClass().getDeclaredField("path");
+            path.setAccessible(true);
 
-        }
 
-        try (Scanner in1 = new Scanner(new File("src/main/resources/notfound.txt"))) {
-            while (in1.hasNext()) {
-                System.out.println(in1.next());
+            Field fieldIsr = in1.getClass().getDeclaredField("source");
+            fieldIsr.setAccessible(true);
+
+            for(int i=0;i<10;i++){
+                System.out.println(in1.next());//clean buff
+                if(i==2) {
+                    method.invoke(fd,null);
+                    //fieldFd.set(fd,true);
+                    //path.set(fs,"empty");
+                }
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

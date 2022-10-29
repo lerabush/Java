@@ -2,6 +2,7 @@ package fifth;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,10 +15,16 @@ public class Task1_2_3 {
         printSumOfValuesFromFile(OK_FILEPATH);
         long time = System.nanoTime() - startTime1;
         System.out.println(time);
+        //Не все значения -  double
         long startTime2 = System.nanoTime();
         printSumOfValuesFromFile(ERROR_FILEPATH);
-        long time2 = System.nanoTime() - startTime1;
+        long time2 = System.nanoTime() - startTime2;
         System.out.println(time2);
+        //Файл не найден
+        long startTime3 = System.nanoTime();
+        printSumOfValuesFromFile("not.txt");
+        long time3 = System.nanoTime() - startTime3;
+        System.out.println(time3);
 
     }
 
@@ -39,16 +46,18 @@ public class Task1_2_3 {
 
     public static void printSumOfValuesFromFile(String fileName) {
         try {
-            System.out.println(sumOfValues(fileName));
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            System.err.println("Error with opening or reading file occured!");
+            double sum = sumOfValues(fileName);
+            System.out.println("Result: "+sum);
+            System.out.println("OK");
+        } catch (IOException ex) {
+            System.out.println("Result: null");
+            System.out.println("Error with opening or reading file occured!");
         } catch(NumberFormatException ex){
-            ex.printStackTrace();
-            System.err.println("Not all symbols are double values!");
+            System.out.println("Result: null");
+            System.out.println("Not all symbols are double values!");
         } catch (Exception ex){
-            ex.printStackTrace();
-            System.err.println("Error ocurred");
+            System.out.println("Result: null");
+            System.out.println("Error ocurred while calculation");
         }
 
     }
