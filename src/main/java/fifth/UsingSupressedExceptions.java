@@ -13,7 +13,7 @@ public class UsingSupressedExceptions {
     public static void method1() throws Exception {
         Throwable first = null;
         try {
-            method3();
+            method2();
         } catch (Exception exception) {
             first = exception;
             try {

@@ -10,28 +10,17 @@ import java.util.Scanner;
 public class Task7 {
     public static void main(String[] args) throws Exception {
         Scanner in1 = null;
-        try (FileInputStream fs = new FileInputStream("src/main/java/fifth/hello.txt")) {
+        try (FileInputStream fs = new FileInputStream("src/main/java/fifth/hello.jpg")) {
             in1 = new Scanner(fs);
-            var fd = fs.getFD();
-            Method method = fd.getClass().getDeclaredMethod("close0");
-            method.setAccessible(true);
-            Field fieldFd = fd.getClass().getDeclaredField("closed");
-            fieldFd.setAccessible(true);
-            Field path = fs.getClass().getDeclaredField("path");
-            path.setAccessible(true);
-
-
-            Field fieldIsr = in1.getClass().getDeclaredField("source");
-            fieldIsr.setAccessible(true);
 
             for(int i=0;i<10;i++){
                 System.out.println(in1.next());//clean buff
-                if(i==2) {
-                    method.invoke(fd,null);
-                    //fieldFd.set(fd,true);
-                    //path.set(fs,"empty");
+                long j = 0;
+                while(j!=10000000000L){
+                    j++;
                 }
             }
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

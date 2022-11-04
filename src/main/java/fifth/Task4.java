@@ -5,12 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-
-
 public class Task4 {
     private static final String OK_FILEPATH = "src/main/java/fifth/out.txt";
     private static final String ERROR_FILEPATH = "src/main/java/fifth/error.txt";
-
 
     public static void main(String[] args) {
         long startTime1 = System.nanoTime();
@@ -50,24 +47,21 @@ public class Task4 {
         Result<Double> result;
         Result<ArrayList<Double>> values = readValues(filename);
         if (values.getErrorCode() == 0) {
-            try {
-                double sum = values.getResult().stream()
-                        .mapToDouble(Double::doubleValue)
-                        .sum();
-                result = new Result(0, sum);
-            } catch (Exception ex) {
-                result = new Result(-3 , null);
-            }
 
+            double sum = values.getResult().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .sum();
+            result = new Result(0, sum);
         } else {
             result = new Result(values.getErrorCode(), null);
         }
         return result;
     }
-    public static void printSumOfValues(String fileName){
+
+    public static void printSumOfValues(String fileName) {
         Result<Double> result = sumOfValues(fileName);
-        System.out.println("Result: "+result.getResult());
-        switch(result.getErrorCode()){
+        System.out.println("Result: " + result.getResult());
+        switch (result.getErrorCode()) {
             case 0:
                 System.out.println("OK");
                 break;
