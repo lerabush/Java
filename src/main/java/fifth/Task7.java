@@ -10,19 +10,19 @@ import java.util.Scanner;
 public class Task7 {
     public static void main(String[] args) throws Exception {
         Scanner in1 = null;
-        try (FileInputStream fs = new FileInputStream("src/main/java/fifth/hello.jpg")) {
+        try (FileInputStream fs = new FileInputStream("src/main/java/fifth/hello.txt")) {
             in1 = new Scanner(fs);
-
-            for(int i=0;i<10;i++){
+            for(int i=0;i<20;i++){
                 System.out.println(in1.next());//clean buff
                 long j = 0;
-                while(j!=10000000000L){
+                while(j!=2){
                     j++;
+                    if(j==2) throw new IOException("oops");
                 }
             }
-
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+            in1.close();
         }
     }
 }
