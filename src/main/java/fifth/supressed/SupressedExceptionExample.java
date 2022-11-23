@@ -1,30 +1,37 @@
 package fifth.supressed;
 
 public class SupressedExceptionExample {
-    public static void main(String[] args) throws Exception {
-        long start1 = System.nanoTime();
-        for(int i=0;i<10000000;i++){
-            suppressedExample();
-        }
-        long time1 = System.nanoTime()-start1;
-        long start2 = System.nanoTime();
-        for(int i=0;i<10000000;i++){
-            chainedExample();
-        }
-        long time2= System.nanoTime()-start2;
-        System.out.println(time1);//74797969100
-        System.out.println(time2);//94560144800
+    public static void main(String[] args) throws Throwable {
+       suppressedExample();
+        // chainedExample();
     }
 
-    public static void suppressedExample() {
-        try (Door door = new Door()) {
-            door.swing();
-        } catch (Exception e) {
-            //e.printStackTrace()
+    public static void suppressedExample() throws SwingException, CloseException {
+        Door door = new Door();
+        Throwable mainEx = null;
+        try {
+            throw new OutOfMemoryError();
+            //door.swing();
+        } catch (Exception | Error ex1) {
+            mainEx = ex1;
+
+        } finally {
+            if(mainEx instanceof Error) throw mainEx;
+            try {
+                door.close();
+            } catch (Exception ex2) {
+                if (mainEx == null) {
+                    throw ex2;
+                } else {
+                    mainEx.addSuppressed(ex2);
+                }
+                System.out.println(mainEx.getSuppressed()[0]);
+                throw mainEx;
+            }
         }
     }
 
-    public static void chainedExample(){
+    public static void chainedExample() {
         Door door = new Door();
         Exception mainEx = null;
         try {
@@ -35,8 +42,11 @@ public class SupressedExceptionExample {
             try {
                 door.close();
             } catch (Exception exception) {
-                mainEx = new SwingException("Main exception", exception);
-                //mainEx.printStackTrace();
+                if (mainEx != null) {
+                    mainEx.initCause(exception);
+                    mainEx.printStackTrace();
+
+                } else exception.printStackTrace();
             }
         }
     }

@@ -1,24 +1,56 @@
 package fifth.supressed;
 
+import java.awt.*;
+
 class SwingException extends Exception {
-    public SwingException(String message, Throwable cause) {
+    public SwingException(String message, Exception cause) {
         super(message, cause);
     }
 
     public SwingException() {
     }
 }
-class CloseException extends Exception {}
+
+class CloseException extends Exception {
+    public CloseException(String message) {
+        super(message);
+    }
+}
+class WindowException extends Exception {
+    public WindowException(String message) {
+        super(message);
+    }
+}
+
+class DoorLock implements AutoCloseable {
+    public void close() throws Exception {
+        System.out.println("The lock is now closed.");
+        throw new CloseException("Lock close exception");
+    }
+}
+class DoorWindow  {
+    public void watch() throws Exception {
+        throw new WindowException("Lock close exception");
+    }
+}
+
 
 class Door implements AutoCloseable {
 
+    DoorLock lock1 = new DoorLock();
+    DoorWindow window = new DoorWindow();
+
     public void swing() throws Exception {
         System.out.println("The door is becoming unhinged!");
-        throw new SwingException();
+        try{
+            this.window.watch();
+        }catch (Exception ex){
+            throw new SwingException("oops",ex);
+        }
     }
 
     public void close() throws Exception {
         System.out.println("The door is now closed.");
-        throw new CloseException();
+        throw new CloseException("Door close exception");
     }
 }

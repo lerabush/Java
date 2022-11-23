@@ -1,75 +1,63 @@
 package fifth;
 
-import fourth.Task11;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
-
-import static fifth.Task1_2_3.printSumOfValuesFromFile;
-import static fifth.Task4.printSumOfValues;
-import static java.lang.Double.parseDouble;
 
 public class CodesVsExceptions {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String c = scanner.nextLine();
         long startTime1 = System.nanoTime();
-        for (long i = 0; i < 1000000; i++) {
+        for (long i = 0; i < 10000; i++) {
             try{
-                testExceptions("src/main/java/fifth/ou.txt");
+                checkIfEqualsHello1(c);
             }catch (Exception ex){
-                System.out.println(ex.getMessage());
+                //System.out.println(ex.getMessage());
             }
+
         }
         long time1 = System.nanoTime() - startTime1;
         long startTime2 = System.nanoTime();
-        for (long i = 0; i < 1000000; i++) {
-            int c = testErrorCodes("src/main/java/fifth/ou.txt");
-            switch(c){
+        for (long i = 0; i < 10000; i++) {
+            int n = checkIfEqualsHello(c);
+            switch (n) {
                 case -1:
-                    System.out.println("File not found");
+                    //System.out.println("Incorrect string");
                     break;
                 case -2:
-                    System.out.println("Incorrect number input");
+                   // System.out.println("Empty string");
                     break;
             }
         }
         long time2 = System.nanoTime() - startTime2;
         System.out.println(time1);
         System.out.println(time2);
-
-        /*long startTime1 = System.nanoTime();
-        for (long i = 0; i < 1000000; i++) {
-            printSumOfValuesFromFile("src/main/java/fifth/out.txt");
-        }
-        long time1 = System.nanoTime() - startTime1;
-        long startTime2 = System.nanoTime();
-        for (long i = 0; i < 1000000; i++) {
-          printSumOfValues("src/main/java/fifth/out.txt");
-        }
-        long time2 = System.nanoTime() - startTime2;
-        System.out.println(time1);
-        System.out.println(time2);*/
     }
 
-    private static void testExceptions(String fileName) throws FileNotFoundException {
-        try (Scanner scan = new Scanner(new File(fileName))) {
-            while (scan.hasNext()) {
-                parseDouble(scan.next());
-            }
+    private static void checkIfEqualsHello1(String c) throws Exception {
+        if (c.isBlank()) throw new EmptyStringException("Empty string");
+        if (!c.equalsIgnoreCase("hello")) {
+            throw new IncorrectStringException("Incorrect string");
         }
+
     }
 
-    private static int testErrorCodes(String fileName) {
-        try (Scanner scan = new Scanner(new File(fileName))) {
-            while (scan.hasNext()) {
-                parseDouble(scan.next());
-            }
-        } catch (FileNotFoundException ex) {
+    private static int checkIfEqualsHello(String c) {
+        if (c.isBlank()) return -2;
+        if (!c.equalsIgnoreCase("hello")) {
             return -1;
-        } catch (NumberFormatException ex) {
-            return -2;
         }
         return 0;
+    }
+
+    private static class EmptyStringException extends Exception {
+        public EmptyStringException(String s) {
+            super(s);
+        }
+    }
+
+    private static class IncorrectStringException extends Exception {
+        public IncorrectStringException(String s) {
+            super(s);
+        }
     }
 }

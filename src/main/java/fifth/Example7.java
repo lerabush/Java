@@ -1,7 +1,8 @@
 package fifth;
 
-public class Example7 implements AutoCloseable {
+import java.io.FileInputStream;
 
+public class Example7 implements AutoCloseable {
     public static void main(String[] args) {
         try (Example7 ex1 = new Example7();
              Example7 ex2 = new Example7()) {
