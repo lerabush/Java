@@ -29,8 +29,8 @@ class DoorLock implements AutoCloseable {
     }
 }
 class DoorWindow  {
-    public void watch() throws Exception {
-        throw new WindowException("Lock close exception");
+    public void watch() throws WindowException {
+        throw new WindowException("Can't look through window");
     }
 }
 
@@ -40,7 +40,7 @@ class Door implements AutoCloseable {
     DoorLock lock1 = new DoorLock();
     DoorWindow window = new DoorWindow();
 
-    public void swing() throws Exception {
+    public void swing() throws SwingException {
         System.out.println("The door is becoming unhinged!");
         try{
             this.window.watch();
@@ -49,7 +49,7 @@ class Door implements AutoCloseable {
         }
     }
 
-    public void close() throws Exception {
+    public void close() throws CloseException {
         System.out.println("The door is now closed.");
         throw new CloseException("Door close exception");
     }

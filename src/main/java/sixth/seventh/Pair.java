@@ -1,6 +1,6 @@
 package sixth.seventh;
 
-public class Pair<E>{
+public class Pair<E extends Number> {
     private E first;
     private E second;
 
@@ -23,5 +23,9 @@ public class Pair<E>{
 
     public void setSecond(E second) {
         this.second = second;
+    }
+
+    public double average() {
+        return (this.first.doubleValue() + this.second.doubleValue()) / 2;
     }
 }

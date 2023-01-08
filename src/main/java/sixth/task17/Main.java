@@ -13,3 +13,12 @@ public class Main {
     }
 }
 //Javap декомпилирует определения класса и показывает вам, что внутри.
+/*Compiled from "Employee.java"
+public class sixth.task17.Employee implements java.lang.Comparable<sixth.task17.Employee> {
+public sixth.task17.Employee(java.lang.String, double);
+public java.lang.String getName();
+public double getSalary();
+public int compareTo(sixth.task17.Employee);
+public java.lang.String toString();
+public int compareTo(java.lang.Object);
+        }*/

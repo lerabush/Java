@@ -12,7 +12,7 @@ public class Main {
         Integer[] array = list.toArray(new Integer[0]);
         System.out.println(Arrays.toString(array));
 
-       // String[] tab = repeat1(5, "what");
+        String[] tab = repeat1(5, "hi");
        // System.out.println(Arrays.stream(tab).toString());
     }
 
@@ -31,5 +31,8 @@ public class Main {
         list.toArray(tab);
         return tab;
     }
+    //    1) Object[] toArray(); использует в себе Class
+    //    2) <T> T[] toArray(T[] a); тоже использует Class
+    //    3) default <T> T[] toArray(IntFunction<T[]> generator) (Использует пред метод)
 
 }

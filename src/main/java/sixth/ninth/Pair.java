@@ -1,6 +1,6 @@
 package sixth.ninth;
 
-public class Pair<E extends Comparable> {
+public class Pair<E> {
 
     private E first;
     private E second;
@@ -25,5 +25,6 @@ public class Pair<E extends Comparable> {
     public void setSecond(E second) {
         this.second = second;
     }
+
 
 }
